@@ -181,7 +181,11 @@ type column struct {
 func convert(src, tmp string, res *result) error {
 	ctx := context.Background()
 
-	u := url.URL{Scheme: "file", Path: src, RawQuery: "mode=ro"}
+	absSrc, err := filepath.Abs(src)
+	if err != nil {
+		return err
+	}
+	u := url.URL{Scheme: "file", Path: absSrc, RawQuery: "mode=ro"}
 	sdb, err := sql.Open("sqlite", u.String())
 	if err != nil {
 		return err
